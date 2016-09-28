@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang=en>
+
+<head>
+<meta charset=utf-8>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+<script src="js/app.js"></script>
+
+<link rel="stylesheet" ref="css/app.css">
+</head>
+
+<body>
+    <div ng-app="myApp">
+        <!-- Вид списка и поля ввода -->
+        <div ng-controller="ListController">
+            <span>
+                <input id="new_point" type="text" ng-model="newPoint" placeholder="Добавьте точку на карту">
+            </span>
+            <span>
+                <ul>
+                    <li ng-repeat="(key, point) in points">
+                        <span>{{point}}
+                            <img data-key="{{key}}" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">
+                        </span>
+                    </li>
+                </ul>
+            </span>
+        </div>
+
+        <!-- Вид карты -->
+        <div>
+           <div>
+        </div>
+    <div>
+</body>
+
+</html>
