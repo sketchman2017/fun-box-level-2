@@ -1,6 +1,7 @@
-angular.module("myApp",[]).run(
+angular.module("myApp", []).run(
 function($rootScope) {}).controller("ListController", 
   function($scope, $rootScope) {
+
     $scope.get_list = function() {
         var keys = Object.keys(localStorage);
         var points_list = {};
@@ -11,6 +12,7 @@ function($rootScope) {}).controller("ListController",
                 points_list[keys[i]] = value;
             }
         }
+
         return points_list;
     }
 
@@ -24,6 +26,8 @@ function($rootScope) {}).controller("ListController",
         var key_for_remove = current_point_index;
         localStorage.removeItem(key_for_remove);
         $scope.points = $scope.get_list();
+
+        $scope.Path.setMap(null);
     }
 
     $scope.newPoint = "";
@@ -43,7 +47,7 @@ function($rootScope) {}).controller("ListController",
     document.getElementById("new_point").addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
-                $scope.put_to_list();
+                var marker_id = $scope.put_to_list();
                 $scope.points = $scope.get_list();
 
                 var marker = new google.maps.Marker({
@@ -52,6 +56,23 @@ function($rootScope) {}).controller("ListController",
                     label: $scope.newPoint,
                     draggable: true
                 });
+
+                var Coordinates = [
+                    {lat: 37.772, lng: -122.214},
+                    {lat: 21.291, lng: -157.821},
+                    {lat: -18.142, lng: 178.431},
+                    {lat: -27.467, lng: 153.027}
+                ];
+
+                $scope.Path = new google.maps.Polyline({
+                    path: Coordinates,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2
+                });
+
+                $scope.Path.setMap($scope.map);
 
                 $scope.newPoint = "";
                 $scope.$digest();
