@@ -53,8 +53,17 @@ function($rootScope) {}).controller("ListController",
                 var marker = new google.maps.Marker({
                     position: {lat: 43.4950, lng: 43.6045},
                     map: $scope.map,
-                    label: $scope.newPoint,
                     draggable: true
+                });
+
+                var marker_tooltip_content = document.createElement('div');
+                marker_tooltip_content.innerHTML = "<strong>" + $scope.newPoint + "</strong>";
+                var infowindow = new google.maps.InfoWindow({
+                    content: marker_tooltip_content
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.open($scope.map, marker);
                 });
 
                 var Coordinates = [
