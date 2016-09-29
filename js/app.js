@@ -6,9 +6,12 @@ function($rootScope) {}).controller("ListController",
         var keys = Object.keys(localStorage);
         var points_list = {};
 
+        //debugger;
+ 
+        // Получение списка. Элемент списка - значение и номер в списке по порядку.
         for (var i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("point")) {
-                var value = localStorage.getItem(keys[i]);
+                var value = JSON.parse(localStorage.getItem(keys[i]));
                 points_list[keys[i]] = value;
             }
         }
@@ -18,15 +21,41 @@ function($rootScope) {}).controller("ListController",
 
     $scope.put_to_list = function() {
         var new_key = "point" + $scope.point_index;
-        localStorage.setItem(new_key, $scope.newPoint);
+        var keys = Object.keys(localStorage);
+        var number = 0;
+
+        // Вычисляем номер нового элемента в списке перед помещением.
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].startsWith("point")) {
+                number++;
+            }
+        }
+
+        localStorage.setItem(new_key, JSON.stringify({"value": $scope.newPoint, "number": number }));
         $scope.point_index++;
     }
 
     $scope.delete_from_list = function(current_point_index) {
         var key_for_remove = current_point_index;
+        var keys = Object.keys(localStorage);
+
+        var point = JSON.parse(localStorage.getItem(key_for_remove));
+        debugger;
+        // При удалении элемента из списка необходимо понизить номера
+        // у всех элементов, у которых они больше.
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].startsWith("point")) {
+                var current_element = JSON.parse(localStorage.getItem(keys[i]));
+                if (current_element.number > point.number) {
+                    current_element.number--;
+                    localStorage.removeItem(keys[i]);
+                    localStorage.setItem(keys[i], JSON.stringify(current_element));
+                }
+            }
+        }
+
         localStorage.removeItem(key_for_remove);
         $scope.points = $scope.get_list();
-
         $scope.Path.setMap(null);
     }
 
@@ -47,7 +76,7 @@ function($rootScope) {}).controller("ListController",
     document.getElementById("new_point").addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
-                var marker_id = $scope.put_to_list();
+                $scope.put_to_list();
                 $scope.points = $scope.get_list();
 
                 var marker = new google.maps.Marker({

@@ -31,8 +31,8 @@
                 <input id="new_point" type="text" ng-model="newPoint" placeholder="Добавьте точку на карту">
                 <ul>
                     <li ng-repeat="(key, point) in points">
-                        {{point}}
-                        <img data-key="key" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">                        
+                        {{point.value}}
+                        <img data-key="{{key}}" data-number="{{point.number}}" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">                        
                     </li>
                 </ul>
             </div>
