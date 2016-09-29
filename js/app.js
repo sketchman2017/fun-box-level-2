@@ -29,10 +29,11 @@ function($rootScope) {}).controller("ListController",
     $scope.newPoint = "";
     $scope.points = $scope.get_list();
     $scope.point_index = 0;
+    $scope.map;
 
     window.initMap = function() {
         // Create a map object and specify the DOM element for display.
-        var map = new google.maps.Map(document.getElementById('map'), {
+        $scope.map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 43.4950, lng: 43.6045},
             scrollwheel: false,
             zoom: 8
@@ -44,6 +45,14 @@ function($rootScope) {}).controller("ListController",
             if (event.which == 13 && $scope.newPoint != "") {
                 $scope.put_to_list();
                 $scope.points = $scope.get_list();
+
+                var marker = new google.maps.Marker({
+                    position: {lat: 43.4950, lng: 43.6045},
+                    map: $scope.map,
+                    label: $scope.newPoint,
+                    draggable: true
+                });
+
                 $scope.newPoint = "";
                 $scope.$digest();
             }
