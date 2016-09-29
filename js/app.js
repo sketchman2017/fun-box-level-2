@@ -30,6 +30,15 @@ function($rootScope) {}).controller("ListController",
     $scope.points = $scope.get_list();
     $scope.point_index = 0;
 
+    window.initMap = function() {
+        // Create a map object and specify the DOM element for display.
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 43.4950, lng: 43.6045},
+            scrollwheel: false,
+            zoom: 8
+        });
+    }
+
     document.getElementById("new_point").addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {

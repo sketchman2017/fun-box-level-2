@@ -3,17 +3,21 @@
 
 <head>
 <meta charset=utf-8>
+<meta name="viewport" content="width=device-width">
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 <script src="js/app.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkYZgRyS-pS5Cu7gUU4_6xp5HNxgo0cX4&callback=initMap"
+    async defer></script>
 
-<link rel="stylesheet" ref="css/app.css">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="https://developers.google.com/maps/documentation/javascript/demos/demos.css">
 </head>
 
-<body>
-    <div ng-app="myApp">
-        <!-- Вид списка и поля ввода -->
-        <div ng-controller="ListController">
+<body ng-app="myApp">
+    <div ng-controller="ListController">
+        <!-- Список и поле ввода -->
+        <div id="list">
             <span>
                 <input id="new_point" type="text" ng-model="newPoint" placeholder="Добавьте точку на карту">
             </span>
@@ -21,17 +25,15 @@
                 <ul>
                     <li ng-repeat="(key, point) in points">
                         <span>{{point}}
-                            <img data-key="{{key}}" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">
+                            <img data-key="key" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">
                         </span>
                     </li>
                 </ul>
             </span>
         </div>
 
-        <!-- Вид карты -->
-        <div>
-           <div>
-        </div>
+        <!-- Карта -->
+        <div id="map"></div>
     <div>
 </body>
 
