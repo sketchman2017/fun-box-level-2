@@ -72,10 +72,41 @@ function($rootScope) {}).controller("ListController",
 
     // Рисуем маркеры и маршрут между ними
     $scope.drawRoute = function() {
+        // Удаление предыдущего маршрута
+        for (var i = 0; i < $scope.polylines.length; i++) {
+            $scope.polylines[i].setMap(null);
+        }
+
         // Сортируем текущий массив точек
-        // Для каждой точки массива вытаскиваем и рисуем маркер в координатах и ломаную маршрута между маркерами 
+        // Для каждой точки массива вытаскиваем и рисуем маркер в координатах и ломаную маршрута между маркерами
+
         $scope.points = $scope.get_list();
-        
+
+        for (var i in $scope.points) {
+            for (var j in $scope.points) {
+                if ($scope.points[i].number + 1 === $scope.points[j].number) {
+                    // Отрисовка маршрута
+                    var Coordinates = [
+                        { lat: parseInt($scope.points[i].lat, 10),
+                          lng: parseInt($scope.points[i].lng, 10) },
+                        { lat: parseInt($scope.points[j].lat, 10),
+                          lng: parseInt($scope.points[j].lng, 10) }
+                    ];
+
+                    var Path = new google.maps.Polyline({
+                        path: Coordinates,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+                    Path.setMap($scope.map);
+                    $scope.polylines.push(Path);
+                }
+            }
+        }
+
     }
 
     $scope.newPoint = "";
@@ -83,6 +114,7 @@ function($rootScope) {}).controller("ListController",
     $scope.points = $scope.get_list();
     $scope.point_index = 0;
     $scope.map;
+    $scope.polylines = [];
 
     window.initMap = function() {
         // Create a map object and specify the DOM element for display.
@@ -124,7 +156,6 @@ function($rootScope) {}).controller("ListController",
                 google.maps.event.addListener(marker, "dragend", function(event) { 
                     var lat_new = event.latLng.lat();
                     var lng_new = event.latLng.lng();
-                    debugger;
 
                     var marker_number = marker.metadata.number;
                     var keys = Object.keys(localStorage);
@@ -145,26 +176,12 @@ function($rootScope) {}).controller("ListController",
                         }
                     }
                     $scope.points = $scope.get_list();
-                    $scope.$digest();
+                    $scope.$digest();                    
+                    $scope.drawRoute();
                 });
 
                 // Отрисовка маршрута
-                var Coordinates = [
-                    {lat: 37.772, lng: -122.214},
-                    {lat: 21.291, lng: -157.821},
-                    {lat: -18.142, lng: 178.431},
-                    {lat: -27.467, lng: 153.027}
-                ];
-
-                $scope.Path = new google.maps.Polyline({
-                    path: Coordinates,
-                    geodesic: true,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 1.0,
-                    strokeWeight: 2
-                });
-
-                $scope.Path.setMap($scope.map);
+                $scope.drawRoute();
 
                 // Обнуление введенного текста - названия точки маршрута
                 $scope.newPoint = "";
