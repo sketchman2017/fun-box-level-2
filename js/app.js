@@ -18,7 +18,7 @@ function($rootScope) {}).controller("ListController",
     }
 
     // Помещение точки в список
-    $scope.put_to_list = function() {
+    $scope.put_to_list = function(new_lat, new_lng) {
         var new_key = "point" + $scope.point_index;
         var keys = Object.keys(localStorage);
         var number = 0;
@@ -34,8 +34,8 @@ function($rootScope) {}).controller("ListController",
         localStorage.setItem(new_key, JSON.stringify({
             "value": $scope.newPoint,
             "number": number,
-            "lat": "43.4950",
-            "lng": "43.6045"
+            "lat": new_lat,
+            "lng": new_lng
         }));
 
         $scope.point_index++;
@@ -89,7 +89,7 @@ function($rootScope) {}).controller("ListController",
 
         // Получаем элемент из хранилища
         var point = JSON.parse(localStorage.getItem(key_for_remove));
-
+        debugger;
         // При удалении элемента из списка необходимо понизить номера
         // у всех элементов, у которых они больше.
         for (var i = 0; i < keys.length; i++) {
@@ -126,25 +126,29 @@ function($rootScope) {}).controller("ListController",
     $scope.map;
     $scope.polylines = [];
     $scope.markers = [];
+    $scope.initialCoords = {lat: 43.4950, lng: 43.6045};
 
     window.initMap = function() {
         // Create a map object and specify the DOM element for display.
         $scope.map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 43.4950, lng: 43.6045},
+            center: $scope.initialCoords,
             scrollwheel: false,
-            zoom: 8
+            zoom: 2
         });
     }
 
     document.getElementById("new_point").addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
-                var marker_number = $scope.put_to_list();
+                var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
+                var new_lng = $scope.initialCoords.lng + 20*(Math.random() - 0.5);
+                debugger;
+                var marker_number = $scope.put_to_list(new_lat, new_lng);
                 $scope.points = $scope.get_list();
 
                 // Создание маркера
                 var marker = new google.maps.Marker({
-                    position: {lat: 43.4950, lng: 43.6045},
+                    position: { lat: new_lat, lng: new_lng }, 
                     map: $scope.map,
                     draggable: true
                 });
