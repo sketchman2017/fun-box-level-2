@@ -42,36 +42,9 @@ function($rootScope) {}).controller("ListController",
         return number;
     }
 
-    $scope.delete_from_list = function(current_point_index) {
-        // ???
-        var key_for_remove = current_point_index;
-        var keys = Object.keys(localStorage);
-
-        // Получаем элемент из хранилища
-        var point = JSON.parse(localStorage.getItem(key_for_remove));
-
-        // При удалении элемента из списка необходимо понизить номера
-        // у всех элементов, у которых они больше.
-        for (var i = 0; i < keys.length; i++) {
-            if (keys[i].startsWith("point")) {
-                var current_element = JSON.parse(localStorage.getItem(keys[i]));
-                if (current_element.number > point.number) {
-                    current_element.number--;
-                    localStorage.removeItem(keys[i]);
-                    localStorage.setItem(keys[i], JSON.stringify(current_element));
-                }
-            }
-        }
-
-        // Удаляем элемент
-        localStorage.removeItem(key_for_remove);
-        // Обновляем список точек из хранилища
-        $scope.points = $scope.get_list();
-        $scope.Path.setMap(null);
-    }
-
     // Рисуем маркеры и маршрут между ними
     $scope.drawRoute = function() {
+        debugger;
         // Удаление предыдущего маршрута
         for (var i = 0; i < $scope.polylines.length; i++) {
             $scope.polylines[i].setMap(null);
@@ -109,12 +82,50 @@ function($rootScope) {}).controller("ListController",
 
     }
 
+    $scope.delete_from_list = function(current_point_index, current_point_number) {
+        // 
+        var key_for_remove = current_point_index;
+        var keys = Object.keys(localStorage);
+
+        // Получаем элемент из хранилища
+        var point = JSON.parse(localStorage.getItem(key_for_remove));
+
+        // При удалении элемента из списка необходимо понизить номера
+        // у всех элементов, у которых они больше.
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].startsWith("point")) {
+                var current_element = JSON.parse(localStorage.getItem(keys[i]));
+                if (current_element.number > point.number) {
+                    current_element.number--;
+                    localStorage.removeItem(keys[i]);
+                    localStorage.setItem(keys[i], JSON.stringify(current_element));
+                }
+            }
+        }
+
+        // Удаляем элемент
+        localStorage.removeItem(key_for_remove);
+
+        // Удаляем маркер
+        for (var i = 0; i < $scope.markers.length; i++) {
+            if ($scope.markers[i].metadata.number === current_point_number) {
+                $scope.markers[i].setMap(null);
+                $scope.markers.splice(i, 1);
+                break;
+            }
+        }
+
+        // Обновляем список точек из хранилища
+        $scope.drawRoute();
+    }
+
     $scope.newPoint = "";
     // Получение списка точек из хранилища
     $scope.points = $scope.get_list();
     $scope.point_index = 0;
     $scope.map;
     $scope.polylines = [];
+    $scope.markers = [];
 
     window.initMap = function() {
         // Create a map object and specify the DOM element for display.
@@ -176,9 +187,11 @@ function($rootScope) {}).controller("ListController",
                         }
                     }
                     $scope.points = $scope.get_list();
-                    $scope.$digest();                    
+                    $scope.$digest();
                     $scope.drawRoute();
                 });
+
+                $scope.markers.push(marker);
 
                 // Отрисовка маршрута
                 $scope.drawRoute();

@@ -32,7 +32,7 @@
                 <ul>
                     <li ng-repeat="(key, point) in points">
                         {{point.value}}
-                        <img data-key="{{key}}" data-number="{{point.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(key)" src="images/delete_small.png">                        
+                        <img data-key="{{key}}" data-number="{{point.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(key, point.number)" src="images/delete_small.png">                        
                     </li>
                 </ul>
             </div>
