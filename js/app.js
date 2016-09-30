@@ -9,8 +9,8 @@ function($rootScope) {}).controller("ListController",
         // Получение списка точек маршрута. Элемент списка - значение и номер в списке по порядку.
         for (var i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("point")) {
-                var value = JSON.parse(localStorage.getItem(keys[i]));
-                points_list[keys[i]] = value;
+                var val = JSON.parse(localStorage.getItem(keys[i]));
+                points_list[keys[i]] = val;
             }
         }
 
