@@ -29,10 +29,12 @@
             <!-- Список и поле ввода -->
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" id="list">
                 <input id="new_point" type="text" ng-model="newPoint" placeholder="Добавьте точку на карту">
-                <ul>
-                    <li ng-repeat="point in points | toArray | orderBy:'number'" class="list_element" ng-init="initPointList()">
+                <ul class="list-group">
+                    <li ng-repeat="point in points | toArray | orderBy:'number'" class="list_element list-group-item" ng-init="initPointList()">
                         {{point.value}}
-                        <img data-key="{{point.key}}" data-number="{{points.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(point.key, point.number)" src="images/delete_small.png">                        
+                        <span class="badge">
+                           <img data-key="{{point.key}}" data-number="{{points.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(point.key, point.number)" src="images/delete_small.png">                        
+                        </span>
                     </li>
                 </ul>
             </div>
