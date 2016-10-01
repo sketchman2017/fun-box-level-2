@@ -33,5 +33,6 @@ img {
     li.list_element {
         height: 3em;
         padding-top: 0.5em;
+        margin: 0.5em;
     }
 }

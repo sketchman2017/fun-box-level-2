@@ -130,12 +130,12 @@ function($rootScope) {}).controller("ListController",
     $scope.initPointList = function() {
         // Обработчик перетаскивания элемента списка
         $scope.elements_for_listen = document.getElementsByClassName("list_element");
-        debugger;
 
         for (var i = 0; i < $scope.elements_for_listen.length; i++) {
             $scope.elements_for_listen[i].ondrop = function(event) {
                 debugger;
-                this.insertAdjacentHTML("beforebegin", "<li class=\"list_element list-group-item\">test</li>")
+                var draggable = event.dataTransfer.getData("text");
+                this.insertAdjacentHTML("beforebegin", "<li class=\"list_element list-group-item\">" + draggable + "</li>")
                 $scope.$digest();
             }
             $scope.elements_for_listen[i].ondragover = function() { return false; }
