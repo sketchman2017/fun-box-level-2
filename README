@@ -1,0 +1,17 @@
+https://dl.fun-box.ru/qt-js.pdf
+
+1. cd funbox_part_2
+2. python
+>>>help() 
+help> modules
+help> CGIHTTPServer
+
+You see at the top of file: /home/your_user/CGIHTTPServer.py
+
+Ctrl-Z
+
+3. python /home/your_user/CGIHTTPServer.py
+
+It is a server.
+
+4. Then go to http://127.0.0.1:8000/ in browser.
