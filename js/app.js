@@ -1,6 +1,9 @@
-angular.module("myApp", []).run(
+var myApp = angular.module("myApp", []).run(
 function($rootScope) {}).controller("ListController", 
   function($scope, $rootScope) {
+    $scope.keys = function(obj){
+        return obj? Object.keys(obj) : [];
+    }
 
     $scope.get_list = function() {
         var keys = Object.keys(localStorage);
@@ -44,7 +47,6 @@ function($rootScope) {}).controller("ListController",
 
     // Рисуем маркеры и маршрут между ними
     $scope.drawRoute = function() {
-        debugger;
         // Удаление предыдущего маршрута
         for (var i = 0; i < $scope.polylines.length; i++) {
             $scope.polylines[i].setMap(null);
@@ -83,13 +85,12 @@ function($rootScope) {}).controller("ListController",
     }
 
     $scope.delete_from_list = function(current_point_index, current_point_number) {
-        // 
         var key_for_remove = current_point_index;
         var keys = Object.keys(localStorage);
-
+        debugger;
         // Получаем элемент из хранилища
         var point = JSON.parse(localStorage.getItem(key_for_remove));
-        debugger;
+
         // При удалении элемента из списка необходимо понизить номера
         // у всех элементов, у которых они больше.
         for (var i = 0; i < keys.length; i++) {
@@ -142,7 +143,7 @@ function($rootScope) {}).controller("ListController",
             if (event.which == 13 && $scope.newPoint != "") {
                 var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
                 var new_lng = $scope.initialCoords.lng + 20*(Math.random() - 0.5);
-                debugger;
+
                 var marker_number = $scope.put_to_list(new_lat, new_lng);
                 $scope.points = $scope.get_list();
 
@@ -168,10 +169,10 @@ function($rootScope) {}).controller("ListController",
                 marker.metadata = { number: marker_number };
 
                 // При перетаскивании маркера изменение координат точки в хранилище
-                google.maps.event.addListener(marker, "dragend", function(event) { 
+                google.maps.event.addListener(marker, "dragend", function(event) {
                     var lat_new = event.latLng.lat();
                     var lng_new = event.latLng.lng();
-
+                    debugger;
                     var marker_number = marker.metadata.number;
                     var keys = Object.keys(localStorage);
 
@@ -208,3 +209,15 @@ function($rootScope) {}).controller("ListController",
         false
     );
 });
+
+myApp.filter("toArray", function(){
+    return function(obj) {
+        var result = [];
+        angular.forEach(obj, function(val, key) {
+            val['key'] = key;
+            result.push(val);
+        });
+        return result;
+    };
+});
+
