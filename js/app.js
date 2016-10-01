@@ -134,14 +134,16 @@ function($rootScope) {}).controller("ListController",
         for (var i = 0; i < $scope.elements_for_listen.length; i++) {
             $scope.elements_for_listen[i].ondrop = function(event) {
                 debugger;
+                event = event || window.event;
                 var draggable = event.dataTransfer.getData("text");
-                this.insertAdjacentHTML("beforebegin", "<li class=\"list_element list-group-item\">" + draggable + "</li>")
+                this.insertAdjacentHTML("beforebegin", "<li draggable class=\"list_element list-group-item\" data-value=\"\"><span class=\"badge\"><img class=\"delete_point\" src=\"images/delete_small.png\"></span>" + draggable + "</li>")
+                event.cancelBubble = true;
                 $scope.$digest();
+                return false;
             }
             $scope.elements_for_listen[i].ondragover = function() { return false; }
         }
     }
-
 
     $scope.newPoint = "";
     // Получение списка точек из хранилища

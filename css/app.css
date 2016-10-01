@@ -13,12 +13,16 @@ img {
         padding-top: 0.5em;
     }
     
+    input.form-control {
+        min-width: 20%;
+    }
 }
 
 @media screen and (min-width: 550px) {
     li.list_element {
         height: 3em;
         padding-top: 0.5em;
+        margin: 0.5em;
     }
 }
 
@@ -26,6 +30,7 @@ img {
     li.list_element {
         height: 3em;
         padding-top: 0.5em;
+        margin: 0.5em;
     }
 }
 
