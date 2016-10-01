@@ -91,7 +91,7 @@ function($rootScope) {}).controller("ListController",
         // Получаем элемент из хранилища
         var point = JSON.parse(localStorage.getItem(key_for_remove));
 
-        // При удалении элемента из списка необходимо понизить номера
+        // При удалении элемента из списка необходимо в хранилище понизить номера
         // у всех элементов, у которых они больше.
         for (var i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("point")) {
@@ -104,7 +104,14 @@ function($rootScope) {}).controller("ListController",
             }
         }
 
-        // Удаляем элемент
+        // У маркеров понижаем номера так же
+        for (var i = 0; i < $scope.markers.length; i++) {
+            if ($scope.markers[i].metadata.number > current_point_number) {
+                $scope.markers[i].metadata.number--;
+            }
+        }
+
+        // Удаляем элемент 
         localStorage.removeItem(key_for_remove);
 
         // Удаляем маркер
