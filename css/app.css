@@ -10,6 +10,7 @@ img {
 @media screen and (min-width: 320px) {
     li.list_element {
         height: 5em;
+        padding-top: 0.5em;
     }
     
 }
@@ -17,17 +18,20 @@ img {
 @media screen and (min-width: 550px) {
     li.list_element {
         height: 3em;
+        padding-top: 0.5em;
     }
 }
 
 @media screen and (min-width: 768px) {
     li.list_element {
         height: 3em;
+        padding-top: 0.5em;
     }
 }
 
 @media screen and (min-width: 960px) {
     li.list_element {
         height: 3em;
+        padding-top: 0.5em;
     }
 }
