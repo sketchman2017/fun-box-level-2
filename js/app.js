@@ -135,7 +135,7 @@ function($rootScope) {}).controller("ListController",
         for (var i = 0; i < $scope.elements_for_listen.length; i++) {
             $scope.elements_for_listen[i].ondrop = function(event) {
                 debugger;
-                this.insertAdjacentHTML("beforebegin", "<li class=\"list_element\">test</li>")
+                this.insertAdjacentHTML("beforebegin", "<li class=\"list_element list-group-item\">test</li>")
                 $scope.$digest();
             }
             $scope.elements_for_listen[i].ondragover = function() { return false; }
