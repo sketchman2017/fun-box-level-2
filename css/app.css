@@ -9,7 +9,7 @@ img {
 
 @media screen and (min-width: 320px) {
     li.list_element {
-        height: 5em;
+        height: 10em;
         padding-top: 0.5em;
     }
     
@@ -20,7 +20,7 @@ img {
 
 @media screen and (min-width: 550px) {
     li.list_element {
-        height: 3em;
+        max-height: 10em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -28,7 +28,7 @@ img {
 
 @media screen and (min-width: 768px) {
     li.list_element {
-        height: 3em;
+        height: 8em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -36,8 +36,14 @@ img {
 
 @media screen and (min-width: 960px) {
     li.list_element {
-        height: 3em;
+        height: 6em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
+}
+
+li {
+    display: inline-block;
+    max-width:90%;
+    word-break:break-all; 
 }
