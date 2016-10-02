@@ -1,10 +1,6 @@
 var myApp = angular.module("myApp", []).run(
 function($rootScope) {}).controller("ListController", 
   function($scope, $rootScope) {
-    $scope.keys = function(obj){
-        return obj? Object.keys(obj) : [];
-    }
-
     $scope.get_list = function() {
         var keys = Object.keys(localStorage);
         var points_list = {};
@@ -136,12 +132,32 @@ function($rootScope) {}).controller("ListController",
                 debugger;
                 event = event || window.event;
                 var draggable = event.dataTransfer.getData("text");
-                this.insertAdjacentHTML("beforebegin", "<li draggable class=\"list_element list-group-item\" data-value=\"\"><span class=\"badge\"><img class=\"delete_point\" src=\"images/delete_small.png\"></span>" + draggable + "</li>")
+                var val = event.dataTransfer.getData("value");
+                var key = event.dataTransfer.getData("key");
+                var number = event.dataTransfer.getData("number");
+                var lat = event.dataTransfer.getData("lat");
+                var lng = event.dataTransfer.getData("lng");
+                this.insertAdjacentHTML("beforebegin",
+                    "<li draggable class='list_element list-group-item' data-value='" + val + "'>" +
+                        "<span class='badge'>" +
+                            "<img data-key='" + key + "' data-number='" + number +
+                          + "' data-lat='" + lat + "' data-lng='" + lng +
+                            "' class='delete_point' src='images/delete_small.png'>" +
+                         "</span>" + draggable +
+                    "</li>");
                 event.cancelBubble = true;
                 $scope.$digest();
                 return false;
             }
             $scope.elements_for_listen[i].ondragover = function() { return false; }
+
+            $scope.elements_for_listen[i].ondragstart = function() {
+                event = event || window.event;
+                event.dataTransfer.setData('key', this.children[0].children[0].getAttribute('data-key'));
+                event.dataTransfer.setData('number', this.children[0].children[0].getAttribute('data-number'));
+                event.dataTransfer.setData('lat', this.children[0].children[0].getAttribute('data-lat'));
+                event.dataTransfer.setData('lng', this.children[0].children[0].getAttribute('data-lng'));
+            }
         }
     }
 
