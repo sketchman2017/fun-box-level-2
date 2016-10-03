@@ -15,3 +15,17 @@ Ctrl-Z
 It is a server.
 
 4. Then go to http://127.0.0.1:8000/ in browser.
+
+5. Tests (Ubuntu): 
+
+5.1 e2e:
+
+sudo apt-get install nodejs
+sudo apt-get install npm
+sudo npm install -g karma
+sudo npm install -g protractor
+sudo npm install -g jasmine
+
+webdriver-manager update
+webdriver-manager start
+protractor tests/conf.js
