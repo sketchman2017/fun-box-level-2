@@ -63,13 +63,17 @@ function($rootScope) {}).controller("ListController",
                 var k = keys[i];
                 var val = points_list[k];
 
-                // Создание маркера
-                var marker = new google.maps.Marker({
-                    position: { lat: val.lat, lng: val.lng },
-                    map: $scope.map,
-                    draggable: true
-                });
-                
+                var marker;
+
+                if (google !== undefined) {
+                    // Создание маркера
+                    marker = new google.maps.Marker({
+                        position: { lat: val.lat, lng: val.lng },
+                        map: $scope.map,
+                        draggable: true
+                    });
+                }
+
                 // Добавление номера маркеру
                 marker.metadata = { number: val.number, value: val.value };
 
