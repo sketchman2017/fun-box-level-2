@@ -280,12 +280,18 @@ function($rootScope) {}).controller("ListController",
     }
 
     window.initMap = function() {
-        // Create a map object and specify the DOM element for display.
-        $scope.map = new google.maps.Map(document.getElementById('map'), {
-            center: $scope.initialCoords,
-            scrollwheel: false,
-            zoom: 2
-        });
+        var online = navigator.onLine;
+
+        if (!online) {
+            document.getElementById("map").innerHTML = "Нет доступа к интернету. Невозможно загрузить карту.";
+        } else {
+            // Create a map object and specify the DOM element for display.
+            $scope.map = new google.maps.Map(document.getElementById('map'), {
+                center: $scope.initialCoords,
+                scrollwheel: false,
+                zoom: 2
+            });
+        }
     }
 
     document.getElementById("new_point").addEventListener("keyup",
@@ -299,7 +305,7 @@ function($rootScope) {}).controller("ListController",
 
                 // Создание маркера
                 var marker = new google.maps.Marker({
-                    position: { lat: new_lat, lng: new_lng }, 
+                    position: { lat: new_lat, lng: new_lng },
                     map: $scope.map,
                     draggable: true
                 });
