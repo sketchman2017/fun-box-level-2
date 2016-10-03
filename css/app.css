@@ -25,7 +25,7 @@ img {
 
 @media screen and (min-width: 320px) {
     li.list_element {
-        height: 8em;
+        min-height: 9em;
         padding-top: 0.5em;
     }
     
@@ -36,7 +36,7 @@ img {
 
 @media screen and (min-width: 550px) {
     li.list_element {
-        max-height: 6em;
+        height: 7em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -44,7 +44,7 @@ img {
 
 @media screen and (min-width: 768px) {
     li.list_element {
-        height: 5em;
+        min-height: 5em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -52,7 +52,7 @@ img {
 
 @media screen and (min-width: 960px) {
     li.list_element {
-        height: 5em;
+        min-height: 5em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -60,7 +60,7 @@ img {
 
 @media screen and (min-width: 1100px) {
     li.list_element {
-        height: 4em;
+        min-height: 4em;
         padding-top: 0.5em;
         margin: 0.5em;
     }
@@ -68,6 +68,6 @@ img {
 
 li {
     display: inline-block;
-    max-width:90%;
+    max-width:95%;
     word-break:break-all; 
 }

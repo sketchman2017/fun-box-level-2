@@ -30,7 +30,7 @@
 
             <!-- Список и поле ввода -->
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" id="list">
-                <input id="new_point" type="text" maxlength="35" class="form-control"  ng-model="newPoint" placeholder="Добавьте точку на карту">
+                <input id="new_point" type="text" maxlength="55" class="form-control"  ng-model="newPoint" placeholder="Добавьте точку на карту">
                 <ul class="list-group" id="sortable">
                     <li ng-repeat="point in points | toArray | orderBy:'number'" draggable class="list_element ui-state-default list-group-item" ng-init="initPointList()" data-value="{{point.value}}">
                         {{point.value}}
