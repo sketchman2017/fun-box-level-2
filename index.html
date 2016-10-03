@@ -15,6 +15,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkYZgRyS-pS5Cu7gUU4_6xp5HNxgo0cX4&callback=initMap"
     async defer></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -30,8 +31,8 @@
             <!-- Список и поле ввода -->
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3" id="list">
                 <input id="new_point" type="text" maxlength="35" class="form-control"  ng-model="newPoint" placeholder="Добавьте точку на карту">
-                <ul class="list-group">
-                    <li ng-repeat="point in points | toArray | orderBy:'number'" draggable class="list_element list-group-item" ng-init="initPointList()" data-value="{{point.value}}">
+                <ul class="list-group" id="sortable">
+                    <li ng-repeat="point in points | toArray | orderBy:'number'" draggable class="list_element ui-state-default list-group-item" ng-init="initPointList()" data-value="{{point.value}}">
                         {{point.value}}
                         <span class="badge">
                            <img data-key="{{point.key}}" data-number="{{points.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(point.key, point.number)" src="images/delete_small.png">                        
@@ -47,6 +48,14 @@
          </div>
        </div>
     </div>
+<script>
+ $(function() {
+     $("#sortable").sortable({
+         placeholder: "ui-sortable-placeholder"
+     });
+ });
+</script>
+
 </body>
 
 </html>

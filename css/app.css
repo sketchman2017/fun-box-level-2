@@ -1,6 +1,22 @@
 body {
     background-color: white;
     margin:0;
+    background: url('http://csssecrets.io/images/stone-art.jpg');
+}
+
+ul#sortable, input#new_point, div#map {
+    border: 10px solid hsla(0,0%,100%,.5);
+    background: white;
+    background-clip: padding-box;
+    font: 100%/2 sans-serif bold;
+}
+
+div#list {
+    box-shadow: 3px 3px 6px -3px black;
+}
+
+input#new_point {
+    min-height: 4em;
 }
 
 img {
