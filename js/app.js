@@ -225,13 +225,10 @@ function($rootScope) {}).controller("ListController",
             for (var i = 0; i < $scope.markers.length; i++) {
                 // Добавление всплывающей подсказки с текстом при клике на маркер
 
-                var marker_tooltip_content = document.createElement('div');
-                marker_tooltip_content.insertAdjacentHTML("afterbegin", "<strong>" + $scope.markers[i].metadata.value + "</strong>");
-
                 google.maps.event.addListener($scope.markers[i], 'click', function() {
                     debugger;
                     new google.maps.InfoWindow({
-                        content: marker_tooltip_content
+                        content: "<div><strong>" + this.metadata.value + "</strong></div>"
                     }).open($scope.map, this);
                 });
 
