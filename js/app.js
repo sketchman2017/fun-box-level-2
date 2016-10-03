@@ -34,25 +34,59 @@ function($rootScope) {}).controller("ListController",
             "value": $scope.newPoint,
             "number": number,
             "lat": new_lat,
-            "lng": new_lng
+            "lng": new_lng,
         }));
 
         $scope.point_index++;
         return number;
     }
 
+    var get_markers = function() {
+        var points_list = $scope.get_list();
+        var markers_list = [];
+        var keys = Object.keys(points_list);
+ 
+        // Создание списка маркеров.
+        for (var i = 0; i < keys.length; i++) {
+                debugger;
+                var k = keys[i];
+                var val = points_list[k];
+
+                // Создание маркера
+                var marker = new google.maps.Marker({
+                    position: { lat: val.lat, lng: val.lng },
+                    map: $scope.map,
+                    draggable: true
+                });
+                // Добавление номера маркеру
+                marker.metadata = { number: val.number, text: val.value };
+
+                markers_list.push(marker);
+            
+        }
+
+        return markers_list
+    }
+
+    var drawMarkers = function() {
+        $scope.markers = get_markers();
+        for (var i = 0; i < $scope.markers.length; i++) {
+            $scope.markers[i].setMap($scope.map);
+        }
+    }
+
     // Рисуем маркеры и маршрут между ними
     $scope.drawRoute = function() {
         // Удаление предыдущего маршрута
         for (var i = 0; i < $scope.polylines.length; i++) {
-            $scope.polylines[i].setMap(null);
+            $scope.polylines[i].setMap($scope.null);
         }
 
         // Сортируем текущий массив точек
         // Для каждой точки массива вытаскиваем и рисуем маркер в координатах и ломаную маршрута между маркерами
 
         $scope.points = $scope.get_list();
-
+        debugger;
         for (var i in $scope.points) {
             for (var j in $scope.points) {
                 if ($scope.points[i].number + 1 === $scope.points[j].number) {
@@ -74,10 +108,11 @@ function($rootScope) {}).controller("ListController",
 
                     Path.setMap($scope.map);
                     $scope.polylines.push(Path);
+
+
                 }
             }
         }
-
     }
 
     $scope.delete_from_list = function(current_point_index, current_point_number) {
@@ -169,6 +204,60 @@ function($rootScope) {}).controller("ListController",
     $scope.polylines = [];
     $scope.markers = [];
     $scope.initialCoords = {lat: 43.4950, lng: 43.6045};
+
+    // Хардкод. Гугл карты не грузятся, ждем секунду
+    $scope.init = function() {
+        function second_passed() {
+            drawMarkers();
+
+            for (var i = 0; i < $scope.markers.length; i++) {
+                // Добавление всплывающей подсказки с текстом при клике на маркер
+                var marker_tooltip_content = document.createElement('div');
+                marker_tooltip_content.innerHTML = "<strong>" + $scope.markers[i].metadata.text + "</strong>";
+                var infowindow = new google.maps.InfoWindow({
+                    content: marker_tooltip_content
+                });
+
+                google.maps.event.addListener($scope.markers[i], 'click', function() {
+                    infowindow.open($scope.map, $scope.markers[i]);
+                });
+
+                // При перетаскивании маркера изменение координат точки в хранилище
+                google.maps.event.addListener($scope.markers[i], "dragend", function(event) {
+                    var lat_new = event.latLng.lat();
+                    var lng_new = event.latLng.lng();
+                    debugger;
+                    var marker_number = this.metadata.number;
+                    var keys = Object.keys(localStorage);
+
+                    // Получение списка точек маршрута. Обновление координат.
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i].startsWith("point")) {
+                            var current_point = JSON.parse(localStorage.getItem(keys[i]));
+                            // Нашли маркер с таким номером
+                            if (marker_number === current_point.number) {
+                                // Обновить координаты
+                                current_point.lat = lat_new;
+                                current_point.lng = lng_new;
+                                localStorage.removeItem(keys[i]);
+                                localStorage.setItem(keys[i], JSON.stringify(current_point));
+                                break;
+                            }
+                        }
+                    }
+                    $scope.points = $scope.get_list();
+                    $scope.$digest();
+                    $scope.drawRoute();
+                });
+
+
+            }
+
+            $scope.drawRoute();
+        }
+        setTimeout(second_passed, 1000)
+
+    }
 
     window.initMap = function() {
         // Create a map object and specify the DOM element for display.
