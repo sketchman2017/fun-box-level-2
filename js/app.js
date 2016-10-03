@@ -216,6 +216,13 @@ function($rootScope) {}).controller("ListController",
     $scope.markers = [];
     $scope.initialCoords = {lat: 43.4950, lng: 43.6045};
 
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var coords = position.coords;
+            $scope.initialCoords = { lat: coords.latitude, lng: coords.longitude };
+        });
+    }
+
     // Ждем секунду загрузки google maps
     $scope.init = function() {
         function second_passed() {
