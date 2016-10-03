@@ -5,7 +5,7 @@ function($rootScope) {}).controller("ListController",
         var keys = Object.keys(localStorage);
         var points_list = {};
 
-        // Получение списка точек маршрута. Элемент списка - значение и номер в списке по порядку.
+        // Получение списка точек маршрута из хранилища. Элемент списка - значение и номер в списке по порядку.
         for (var i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("point")) {
                 var val = JSON.parse(localStorage.getItem(keys[i]));
@@ -16,8 +16,8 @@ function($rootScope) {}).controller("ListController",
         return points_list;
     }
 
+    // Получение индекса (максимального) из хранилища
     $scope.get_point_index = function() {
-        debugger;
         $scope.point_index = localStorage.getItem("_point_index");
         if ($scope.point_index === null) {
             localStorage.setItem("_point_index", 0);
@@ -31,7 +31,7 @@ function($rootScope) {}).controller("ListController",
         var new_key = "point" + $scope.point_index;
         var keys = Object.keys(localStorage);
         var number = 0;
-        debugger;
+
         // Вычисляем номер нового элемента в списке перед помещением.
         for (var i = 0; i < keys.length; i++) {
             if (keys[i].startsWith("point")) {
@@ -54,7 +54,6 @@ function($rootScope) {}).controller("ListController",
 
     // Создание списка маркеров из хранилища при обновлении страницы
     var get_markers = function() {
-        debugger;
         var points_list = $scope.get_list();
         var markers_list = [];
         var keys = Object.keys(points_list);
@@ -70,6 +69,7 @@ function($rootScope) {}).controller("ListController",
                     map: $scope.map,
                     draggable: true
                 });
+                
                 // Добавление номера маркеру
                 marker.metadata = { number: val.number, value: val.value };
 
@@ -223,16 +223,16 @@ function($rootScope) {}).controller("ListController",
             drawMarkers();
 
             for (var i = 0; i < $scope.markers.length; i++) {
-                debugger;
                 // Добавление всплывающей подсказки с текстом при клике на маркер
+
                 var marker_tooltip_content = document.createElement('div');
-                marker_tooltip_content.innerHTML = "<strong>" + $scope.markers[i].metadata.value + "</strong>";
-                var infowindow = new google.maps.InfoWindow({
-                    content: marker_tooltip_content
-                });
+                marker_tooltip_content.insertAdjacentHTML("afterbegin", "<strong>" + $scope.markers[i].metadata.value + "</strong>");
 
                 google.maps.event.addListener($scope.markers[i], 'click', function() {
-                    infowindow.open($scope.map, this);
+                    debugger;
+                    new google.maps.InfoWindow({
+                        content: marker_tooltip_content
+                    }).open($scope.map, this);
                 });
 
                 // При перетаскивании маркера изменение координат точки в хранилище
