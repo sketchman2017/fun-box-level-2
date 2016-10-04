@@ -58,18 +58,25 @@ function($rootScope) {}).controller("ListController",
             // Изменяем номера в шаблоне и хранилище
             var c = this.children;
             for (var i = 0; i < c.length; i++) {
-                debugger;
                 var point = c[i].children[0].children[0].getAttribute("data-key");
                 c[i].children[0].children[0].setAttribute("data-number", i);
 
                 var item = JSON.parse(localStorage.getItem(point));
+                debugger;
+
+                for (var j = 0; j < $scope.markers.length; j++) { 
+                    if ($scope.markers[j].metadata.number === item.number) {
+                        $scope.markers[j].metadata.number = i;
+                        break;
+                    }
+                }
+
                 item.number = i;
                 localStorage.removeItem(point);
                 localStorage.setItem(point, JSON.stringify(item));
             }
             // Перерисовываем маршрут
             $scope.drawRoute();
-            
         }
     });
 
