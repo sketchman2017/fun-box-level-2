@@ -62,7 +62,6 @@ function($rootScope) {}).controller("ListController",
                 c[i].children[0].children[0].setAttribute("data-number", i);
 
                 var item = JSON.parse(localStorage.getItem(point));
-                debugger;
 
                 for (var j = 0; j < $scope.markers.length; j++) { 
                     if ($scope.markers[j].metadata.number === item.number) {
@@ -204,43 +203,6 @@ function($rootScope) {}).controller("ListController",
         $scope.drawRoute();
     }
 
-    $scope.initPointList = function() {
-        // Обработчик перетаскивания элемента списка
-        $scope.elements_for_listen = document.getElementsByClassName("list_element");
-
-        for (var i = 0; i < $scope.elements_for_listen.length; i++) {
-            $scope.elements_for_listen[i].ondrop = function(event) {
-                event = event || window.event;
-                var draggable = event.dataTransfer.getData("text");
-                var val = event.dataTransfer.getData("value");
-                var key = event.dataTransfer.getData("key");
-                var number = event.dataTransfer.getData("number");
-                var lat = event.dataTransfer.getData("lat");
-                var lng = event.dataTransfer.getData("lng");
-                this.insertAdjacentHTML("beforebegin",
-                    "<li draggable class='list_element list-group-item' data-value='" + val + "'>" +
-                        "<span class='badge'>" +
-                            "<img data-key='" + key + "' data-number='" + number +
-                          + "' data-lat='" + lat + "' data-lng='" + lng +
-                            "' class='delete_point' src='images/delete_small.png'>" +
-                         "</span>" + draggable +
-                    "</li>");
-                event.cancelBubble = true;
-                $scope.$digest();
-                return false;
-            }
-            $scope.elements_for_listen[i].ondragover = function() { return false; }
-
-            $scope.elements_for_listen[i].ondragstart = function() {
-                event = event || window.event;
-                event.dataTransfer.setData('key', this.children[0].children[0].getAttribute('data-key'));
-                event.dataTransfer.setData('number', this.children[0].children[0].getAttribute('data-number'));
-                event.dataTransfer.setData('lat', this.children[0].children[0].getAttribute('data-lat'));
-                event.dataTransfer.setData('lng', this.children[0].children[0].getAttribute('data-lng'));
-            }
-        }
-    }
-
     $scope.newPoint = "";
     // Получение списка точек из хранилища
     $scope.points = $scope.get_list();
@@ -266,7 +228,6 @@ function($rootScope) {}).controller("ListController",
                 // Добавление всплывающей подсказки с текстом при клике на маркер
 
                 google.maps.event.addListener($scope.markers[i], 'click', function() {
-                    debugger;
                     new google.maps.InfoWindow({
                         content: "<div><strong>" + this.metadata.value + "</strong></div>"
                     }).open($scope.map, this);
@@ -407,3 +368,45 @@ myApp.filter("toArray", function(){
     };
 });
 
+
+ /* Test Code */
+describe('Router', function () {
+      beforeEach(module('myApp'));
+      var $controller;
+      beforeEach(inject(function(_$controller_){
+        $controller = _$controller_;
+      }));
+      describe('get list from local storage', function () {
+        it('get and check list from localStorage', function () {
+          var $scope = {};
+          var controller = $controller('ListController', { $scope: $scope });
+
+          $scope.x = 1;
+          $scope.y = 2;
+
+          localStorage.clear();
+          localStorage.setItem('point0', JSON.stringify({
+            "value": "test point title 1",
+            "number": 0,
+            "lat": 43.58,
+            "lng": 23.90,
+          }));
+          localStorage.setItem('point7', JSON.stringify({
+            "value": "test point title 2",
+            "number": 1,
+            "lat": 0.00,
+            "lng": 10.00,
+          }));
+          localStorage.setItem('point5', JSON.stringify({
+            "value": "test point title 3",
+            "number": 2,
+            "lat": 25.00,
+            "lng": 70.01,
+          }));
+
+
+          var list = $scope.get_list();
+          expect(lists.length()).toBe(3);
+        }); 
+      });
+    });
