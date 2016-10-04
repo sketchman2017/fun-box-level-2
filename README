@@ -29,3 +29,23 @@ sudo npm install -g jasmine
 webdriver-manager update
 webdriver-manager start
 protractor tests/conf.js
+
+5.2 Unit:
+
+sudo npm install -g karma
+
+sudo npm install -g karma-jasmine
+sudo npm install -g jasmine-core
+sudo npm install -g karma@*
+
+sudo npm install jasmine-core@*
+
+sudo npm install -g karma-junit-reporter
+sudo npm install -g karma@
+sudo npm install karma-chrome-launcher -g
+sudo npm install karma-firefox-launcher -g
+sudo npm install karma-opera-launcher -g
+sudo npm install karma-ie-launcher -g
+
+(Конф. файл создан командой karma init karma.conf.js)
+

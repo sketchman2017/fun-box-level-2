@@ -52,6 +52,28 @@ function($rootScope) {}).controller("ListController",
         return number;
     }
 
+    $("#sortable").sortable({
+        placeholder: "ui-sortable-placeholder",
+        update: function(e, ui) {
+            // Изменяем номера в шаблоне и хранилище
+            var c = this.children;
+            for (var i = 0; i < c.length; i++) {
+                debugger;
+                var point = c[i].children[0].children[0].getAttribute("data-key");
+                c[i].children[0].children[0].setAttribute("data-number", i);
+
+                var item = JSON.parse(localStorage.getItem(point));
+                item.number = i;
+                localStorage.removeItem(point);
+                localStorage.setItem(point, JSON.stringify(item));
+            }
+            // Перерисовываем маршрут
+            $scope.drawRoute();
+            
+        }
+    });
+
+
     // Создание списка маркеров из хранилища при обновлении страницы
     var get_markers = function() {
         var points_list = $scope.get_list();
@@ -85,7 +107,7 @@ function($rootScope) {}).controller("ListController",
     }
 
     // Отрисовка маркеров на карте при обновлении страницы
-    var drawMarkers = function() {
+    $scope.drawMarkers = function() {
         $scope.markers = get_markers();
         for (var i = 0; i < $scope.markers.length; i++) {
             $scope.markers[i].setMap($scope.map);
@@ -231,7 +253,7 @@ function($rootScope) {}).controller("ListController",
     $scope.init = function() {
         function second_passed() {
             $scope.get_point_index();
-            drawMarkers();
+            $scope.drawMarkers();
 
             for (var i = 0; i < $scope.markers.length; i++) {
                 // Добавление всплывающей подсказки с текстом при клике на маркер
@@ -294,7 +316,8 @@ function($rootScope) {}).controller("ListController",
         }
     }
 
-    document.getElementById("new_point").addEventListener("keyup",
+    if (!navigator.online) {
+      document.getElementById("new_point").addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
                 var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
@@ -362,7 +385,8 @@ function($rootScope) {}).controller("ListController",
             }
         },
         false
-    );
+      );
+    }
 });
 
 myApp.filter("toArray", function(){

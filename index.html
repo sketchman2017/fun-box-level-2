@@ -34,7 +34,7 @@
                     <li ng-repeat="point in points | toArray | orderBy:'number'" draggable class="list_element ui-state-default list-group-item" ng-init="initPointList()" data-value="{{point.value}}">
                         {{point.value}}
                         <span class="badge">
-                           <img data-key="{{point.key}}" data-number="{{points.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(point.key, point.number)" src="images/delete_small.png">                        
+                           <img data-key="{{point.key}}" data-number="{{point.number}}" data-lat="{{point.lat}}" data-lng="{{point.lng}}" class="delete_point" ng-click="delete_from_list(point.key, point.number)" src="images/delete_small.png">                        
                         </span>
                     </li>
                 </ul>
@@ -50,20 +50,6 @@
          </div>
        </div>
     </div>
-            <script>
-                var online = navigator.onLine; 
-                if (!online) {
-                    document.getElementById("map").innerHTML = "Нет доступа к интернету. Невозможно загрузить карту.";
-                }   
-            </script>
-<script>
- $(function() {
-     $("#sortable").sortable({
-         placeholder: "ui-sortable-placeholder"
-     });
- });
-</script>
-
 </body>
 
 </html>

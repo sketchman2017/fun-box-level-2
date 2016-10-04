@@ -23,6 +23,13 @@ img {
     max-width: 100%;
 }
 
+.ui-sortable-placeholder {
+  border: 3px dashed #aaa;
+  height: 45px;
+  width: 344px;
+  background: #ccc;
+}
+
 @media screen and (min-width: 320px) {
     li.list_element {
         min-height: 9em;
