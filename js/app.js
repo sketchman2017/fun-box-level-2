@@ -12,7 +12,6 @@ function($rootScope) {}).controller("ListController",
                 points_list[keys[i]] = val;
             }
         }
-        console.log(points_list);
         return points_list;
     }
 
@@ -379,8 +378,9 @@ describe('Router', function () {
       beforeEach(inject(function(_$controller_){
         $controller = _$controller_;
       }));
-      describe('get list from local storage', function () {
-        it('get and check list from localStorage', function () {
+      
+      describe('getting list from local storage', function () {
+        it('gets and check list from localStorage', function () {
           var $scope = {};
           var controller = $controller('ListController', { $scope: $scope });
 
@@ -430,5 +430,41 @@ describe('Router', function () {
           });
         }); 
       });
+
+      describe('checks _point_index', function () {
+        it('checks _point_index', function () {
+          var $scope = {};
+          var controller = $controller('ListController', { $scope: $scope });
+
+          localStorage.clear();
+          $scope.get_point_index();
+          expect($scope.point_index).toEqual(0);
+
+          localStorage.clear();
+          localStorage.setItem("_point_index", 10);
+          $scope.get_point_index();
+          expect($scope.point_index).toEqual('10');
+        });
+      });
+
+      describe('put point to list (local storage)', function () {
+        it('put point to list (localStorage)', function () {
+          var $scope = {};
+          var controller = $controller('ListController', { $scope: $scope });
+          $scope.point_index = '15';
+          localStorage.clear();
+          $scope.newPoint = "New point"
+          $scope.put_to_list(10.00, 11.78);
+          var p = JSON.parse(localStorage.getItem("point15"));
+          expect($scope.point_index).toEqual(16);
+          expect(p).toEqual({
+            "value": $scope.newPoint,
+            "number": 0,
+            "lat": 10.00,
+            "lng": 11.78,
+          });
+        });
+      });
+
     });
 
