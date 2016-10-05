@@ -12,7 +12,7 @@ function($rootScope) {}).controller("ListController",
                 points_list[keys[i]] = val;
             }
         }
-
+        console.log(points_list);
         return points_list;
     }
 
@@ -285,7 +285,9 @@ function($rootScope) {}).controller("ListController",
     }
 
     if (!navigator.online) {
-      document.getElementById("new_point").addEventListener("keyup",
+      var new_point = document.getElementById("new_point");
+      if (new_point !== null) {
+        new_point.addEventListener("keyup",
         function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
                 var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
@@ -354,6 +356,7 @@ function($rootScope) {}).controller("ListController",
         },
         false
       );
+      }
     }
 });
 
@@ -381,9 +384,6 @@ describe('Router', function () {
           var $scope = {};
           var controller = $controller('ListController', { $scope: $scope });
 
-          $scope.x = 1;
-          $scope.y = 2;
-
           localStorage.clear();
           localStorage.setItem('point0', JSON.stringify({
             "value": "test point title 1",
@@ -404,9 +404,31 @@ describe('Router', function () {
             "lng": 70.01,
           }));
 
-
           var list = $scope.get_list();
-          expect(lists.length()).toBe(3);
+
+          expect(Object.keys(list).length).toEqual(3);
+
+          expect(list["point0"]).toEqual({
+            "value": "test point title 1",
+            "number": 0,
+            "lat": 43.58,
+            "lng": 23.90,
+          });
+
+          expect(list["point7"]).toEqual({
+            "value": "test point title 2",
+            "number": 1,
+            "lat": 0.00,
+            "lng": 10.00,
+          });
+
+          expect(list['point5']).toEqual({
+            "value": "test point title 3",
+            "number": 2,
+            "lat": 25.00,
+            "lng": 70.01,
+          });
         }); 
       });
     });
+

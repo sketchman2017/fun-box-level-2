@@ -49,3 +49,4 @@ sudo npm install karma-ie-launcher -g
 
 (Конф. файл создан командой karma init karma.conf.js)
 
+karma start karma.conf.js
