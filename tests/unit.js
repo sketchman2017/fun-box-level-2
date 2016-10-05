@@ -128,11 +128,9 @@ describe('Router', function () {
           });
 
           markers_list = $scope.get_markers();
-          console.log(markers_list[0]);
 
           expect(Object.keys(markers_list).length).toEqual(3);
         });
       });
-
-    });
+});
 

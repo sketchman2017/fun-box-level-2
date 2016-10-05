@@ -55,21 +55,26 @@ function($rootScope) {}).controller("ListController",
         placeholder: "ui-sortable-placeholder",
         update: function(e, ui) {
             // Изменяем номера в шаблоне и хранилище
+            // Список, в котором происходит перетаскивание
             var c = this.children;
+            // Для всех элементов списка
             for (var i = 0; i < c.length; i++) {
+                // Находим ключ (уникальный идентификатор), лежащий в аттрибуте изображения
                 var point = c[i].children[0].children[0].getAttribute("data-key");
+                // Находим номер в списке - атрибут
                 c[i].children[0].children[0].setAttribute("data-number", i);
-
+                // По идентификатору получаем точку из хранилища
                 var item = JSON.parse(localStorage.getItem(point));
-
+                // В списке маркеров нужно искать по идентификатору
                 for (var j = 0; j < $scope.markers.length; j++) { 
-                    if ($scope.markers[j].metadata.number === item.number) {
+                    if ($scope.markers[j].metadata.id === point) {
                         $scope.markers[j].metadata.number = i;
                         break;
                     }
                 }
-
+                // Для точки изменяем номер
                 item.number = i;
+                // Заменяем точку на обновленную в хранилище
                 localStorage.removeItem(point);
                 localStorage.setItem(point, JSON.stringify(item));
             }
@@ -86,7 +91,9 @@ function($rootScope) {}).controller("ListController",
         var keys = Object.keys(points_list);
  
         // Создание списка маркеров.
+        // Для каждого элемента из хранилища
         for (var i = 0; i < keys.length; i++) {
+            // Получаем ключ и значение
             var k = keys[i];
             var val = points_list[k];
             var marker;
@@ -101,7 +108,7 @@ function($rootScope) {}).controller("ListController",
             }
 
             // Добавление номера маркеру
-            marker.metadata = { number: val.number, value: val.value };
+            marker.metadata = { number: val.number, value: val.value, id: k };
 
             markers_list.push(marker);
         }
@@ -111,8 +118,10 @@ function($rootScope) {}).controller("ListController",
 
     // Отрисовка маркеров на карте при обновлении страницы
     $scope.drawMarkers = function() {
+        // Получаем список маркеров
         $scope.markers = $scope.get_markers();
         for (var i = 0; i < $scope.markers.length; i++) {
+            // Назначаем каждому карту
             $scope.markers[i].setMap($scope.map);
         }
     }
@@ -121,6 +130,7 @@ function($rootScope) {}).controller("ListController",
     $scope.drawRoute = function() {
         // Удаление предыдущего маршрута
         for (var i = 0; i < $scope.polylines.length; i++) {
+            // Каждую линию отцепляем от карты
             $scope.polylines[i].setMap($scope.null);
         }
 
@@ -129,10 +139,13 @@ function($rootScope) {}).controller("ListController",
 
         $scope.points = $scope.get_list();
 
+        // Для каждой точки
         for (var i in $scope.points) {
+            // Ищем такую, что
             for (var j in $scope.points) {
+                // Ее номер на единицу больше
                 if ($scope.points[i].number + 1 === $scope.points[j].number) {
-                    // Отрисовка маршрута
+                    // Отрисовка маршрута согласно координатам двух этих точек
                     var Coordinates = [
                         { lat: parseInt($scope.points[i].lat, 10),
                           lng: parseInt($scope.points[i].lng, 10) },
@@ -147,22 +160,19 @@ function($rootScope) {}).controller("ListController",
                         strokeOpacity: 1.0,
                         strokeWeight: 2
                     });
-
+                    // Назначаем звену ломаной карту, запоминаем
                     Path.setMap($scope.map);
                     $scope.polylines.push(Path);
-
-
                 }
             }
         }
     }
 
     $scope.delete_from_list = function(current_point_index, current_point_number) {
-        var key_for_remove = current_point_index;
         var keys = Object.keys(localStorage);
 
         // Получаем элемент из хранилища
-        var point = JSON.parse(localStorage.getItem(key_for_remove));
+        var point = JSON.parse(localStorage.getItem(current_point_index));
 
         // При удалении элемента из списка необходимо в хранилище понизить номера
         // у всех элементов, у которых они больше.
@@ -185,7 +195,7 @@ function($rootScope) {}).controller("ListController",
         }
 
         // Удаляем элемент 
-        localStorage.removeItem(key_for_remove);
+        localStorage.removeItem(current_point_index);
 
         // Удаляем маркер
         for (var i = 0; i < $scope.markers.length; i++) {
@@ -196,7 +206,7 @@ function($rootScope) {}).controller("ListController",
             }
         }
 
-        // Обновляем список точек из хранилища
+        // Обновляем список точек из хранилища, рисуем маршруты
         $scope.drawRoute();
     }
 
@@ -215,12 +225,13 @@ function($rootScope) {}).controller("ListController",
         });
     }
 
-    // Ждем секунду загрузки google maps
+    // Ждем секунду загрузки google maps. При обновлении страницы.
     $scope.init = function() {
         function second_passed() {
             $scope.get_point_index();
             $scope.drawMarkers();
 
+            // Рисуем все маркеры
             for (var i = 0; i < $scope.markers.length; i++) {
                 // Добавление всплывающей подсказки с текстом при клике на маркер
 
@@ -242,7 +253,7 @@ function($rootScope) {}).controller("ListController",
                         if (keys[i].startsWith("point")) {
                             var current_point = JSON.parse(localStorage.getItem(keys[i]));
                             // Нашли маркер с таким номером
-                            if (marker_number === current_point.number) {
+                            if (this.metadata.id === keys[i]) {
                                 // Обновить координаты
                                 current_point.lat = lat_new;
                                 current_point.lng = lng_new;
@@ -262,11 +273,11 @@ function($rootScope) {}).controller("ListController",
 
             $scope.drawRoute();
         }
-        setTimeout(second_passed, 1000)
+        setTimeout(second_passed, 1000);
 
     }
 
-    window.initMap = function() {
+    initMap = function() {
         var online = navigator.onLine;
 
         if (!online) {
@@ -282,10 +293,12 @@ function($rootScope) {}).controller("ListController",
     }
 
     if (!navigator.online) {
+      // Помещаем новую точку на карту
       var new_point = document.getElementById("new_point");
       if (new_point !== null) {
-        new_point.addEventListener("keyup",
-        function(event) {
+    
+         new_point.addEventListener("keyup",
+          function(event) {
             if (event.which == 13 && $scope.newPoint != "") {
                 var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
                 var new_lng = $scope.initialCoords.lng + 20*(Math.random() - 0.5);
@@ -312,24 +325,27 @@ function($rootScope) {}).controller("ListController",
                 });
 
                 // Добавление номера маркеру
-                marker.metadata = { number: marker_number };
+                marker.metadata = { number: marker_number, value: $scope.newPoint , id: "point" + ($scope.point_index - 1) };
 
                 // При перетаскивании маркера изменение координат точки в хранилище
                 google.maps.event.addListener(marker, "dragend", function(event) {
+                    // Новые координаты
+                    debugger;
                     var lat_new = event.latLng.lat();
                     var lng_new = event.latLng.lng();
-                    var marker_number = marker.metadata.number;
                     var keys = Object.keys(localStorage);
 
                     // Получение списка точек маршрута. Обновление координат.
                     for (var i = 0; i < keys.length; i++) {
                         if (keys[i].startsWith("point")) {
+                            // Текущая точка
                             var current_point = JSON.parse(localStorage.getItem(keys[i]));
                             // Нашли маркер с таким номером
-                            if (marker_number === current_point.number) {
+                            if (this.metadata.id === keys[i]) {
                                 // Обновить координаты
                                 current_point.lat = lat_new;
                                 current_point.lng = lng_new;
+                                // Заменить в хранилище обновленную точку
                                 localStorage.removeItem(keys[i]);
                                 localStorage.setItem(keys[i], JSON.stringify(current_point));
                                 break;
@@ -353,6 +369,8 @@ function($rootScope) {}).controller("ListController",
         },
         false
       );
+     
+     
       }
     }
 });
