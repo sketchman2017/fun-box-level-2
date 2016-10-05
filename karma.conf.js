@@ -19,9 +19,9 @@ module.exports = function(config) {
       'lib/jquery-ui.js',      
       'lib/angular.min.js',
       'lib/angular-mocks.js',
-      'bootstrap.min.js',
+      'lib/bootstrap.min.js',
+      'lib/maps.googleapis.com-maps-api.js',
     //  'js/*.js',
-//      'tests/unit.js'
       'js/app.js'
     ],
 
