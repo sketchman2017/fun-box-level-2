@@ -80,32 +80,30 @@ function($rootScope) {}).controller("ListController",
 
 
     // Создание списка маркеров из хранилища при обновлении страницы
-    var get_markers = function() {
+    $scope.get_markers = function() {
         var points_list = $scope.get_list();
         var markers_list = [];
         var keys = Object.keys(points_list);
  
         // Создание списка маркеров.
         for (var i = 0; i < keys.length; i++) {
-                var k = keys[i];
-                var val = points_list[k];
+            var k = keys[i];
+            var val = points_list[k];
+            var marker;
 
-                var marker;
+            if (google !== undefined) {
+                // Создание маркера
+                marker = new google.maps.Marker({
+                    position: { lat: val.lat, lng: val.lng },
+                    map: $scope.map,
+                    draggable: true
+                });
+            }
 
-                if (google !== undefined) {
-                    // Создание маркера
-                    marker = new google.maps.Marker({
-                        position: { lat: val.lat, lng: val.lng },
-                        map: $scope.map,
-                        draggable: true
-                    });
-                }
+            // Добавление номера маркеру
+            marker.metadata = { number: val.number, value: val.value };
 
-                // Добавление номера маркеру
-                marker.metadata = { number: val.number, value: val.value };
-
-                markers_list.push(marker);
-            
+            markers_list.push(marker);
         }
 
         return markers_list
@@ -113,7 +111,7 @@ function($rootScope) {}).controller("ListController",
 
     // Отрисовка маркеров на карте при обновлении страницы
     $scope.drawMarkers = function() {
-        $scope.markers = get_markers();
+        $scope.markers = $scope.get_markers();
         for (var i = 0; i < $scope.markers.length; i++) {
             $scope.markers[i].setMap($scope.map);
         }
@@ -389,19 +387,19 @@ describe('Router', function () {
             "value": "test point title 1",
             "number": 0,
             "lat": 43.58,
-            "lng": 23.90,
+            "lng": 23.90
           }));
           localStorage.setItem('point7', JSON.stringify({
             "value": "test point title 2",
             "number": 1,
             "lat": 0.00,
-            "lng": 10.00,
+            "lng": 10.00
           }));
           localStorage.setItem('point5', JSON.stringify({
             "value": "test point title 3",
             "number": 2,
             "lat": 25.00,
-            "lng": 70.01,
+            "lng": 70.01
           }));
 
           var list = $scope.get_list();
@@ -412,21 +410,21 @@ describe('Router', function () {
             "value": "test point title 1",
             "number": 0,
             "lat": 43.58,
-            "lng": 23.90,
+            "lng": 23.90
           });
 
           expect(list["point7"]).toEqual({
             "value": "test point title 2",
             "number": 1,
             "lat": 0.00,
-            "lng": 10.00,
+            "lng": 10.00
           });
 
           expect(list['point5']).toEqual({
             "value": "test point title 3",
             "number": 2,
             "lat": 25.00,
-            "lng": 70.01,
+            "lng": 70.01
           });
         }); 
       });
@@ -447,7 +445,7 @@ describe('Router', function () {
         });
       });
 
-      describe('put point to list (local storage)', function () {
+      describe('put point to list (localStorage)', function () {
         it('put point to list (localStorage)', function () {
           var $scope = {};
           var controller = $controller('ListController', { $scope: $scope });
@@ -461,10 +459,50 @@ describe('Router', function () {
             "value": $scope.newPoint,
             "number": 0,
             "lat": 10.00,
-            "lng": 11.78,
+            "lng": 11.78
           });
         });
       });
 
-    });
+      describe('getting markers list list (localStorage) with google maps mock', function () {
+        it('gets markers list (localStorage)', function () {
+          var $scope = {};
+          var controller = $controller('ListController', { $scope: $scope });
+          
+          localStorage.clear();
+          localStorage.setItem('point0', JSON.stringify({
+            "value": "test point title № 1",
+            "number": 0,
+            "lat": 3.58,
+            "lng": 2.90
+          }));
+          localStorage.setItem('point3', JSON.stringify({
+            "value": "test point title № 2",
+            "number": 1,
+            "lat": 40.00,
+            "lng": 17.00
+          }));
+          localStorage.setItem('point6', JSON.stringify({
+            "value": "test point title № 3",
+            "number": 2,
+            "lat": 25.00,
+            "lng": 70.01
+          }));
 
+          $scope.initialCoords = {lat: 43.4950, lng: 43.6045};
+
+          // Create a map object and specify the DOM element for display.
+          $scope.map = new google.maps.Map(document.getElementById('map'), {
+              center: $scope.initialCoords,
+              scrollwheel: false,
+              zoom: 2
+          });
+
+          markers_list = $scope.get_markers();
+          console.log(markers_list[0]);
+
+          expect(Object.keys(markers_list).length).toEqual(3);
+        });
+      });
+
+    });
