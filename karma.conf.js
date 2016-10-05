@@ -21,7 +21,7 @@ module.exports = function(config) {
       'lib/angular-mocks.js',
       'lib/bootstrap.min.js',
       'lib/maps.googleapis.com-maps-api.js',
-    //  'js/*.js',
+      'tests/unit.js',
       'js/app.js'
     ],
 
