@@ -199,7 +199,7 @@ function($rootScope) {}).controller("ListController",
 
         // Удаляем маркер
         for (var i = 0; i < $scope.markers.length; i++) {
-            if ($scope.markers[i].metadata.number === current_point_number) {
+            if ($scope.markers[i].metadata.id === current_point_index) {
                 $scope.markers[i].setMap(null);
                 $scope.markers.splice(i, 1);
                 break;
@@ -330,7 +330,6 @@ function($rootScope) {}).controller("ListController",
                 // При перетаскивании маркера изменение координат точки в хранилище
                 google.maps.event.addListener(marker, "dragend", function(event) {
                     // Новые координаты
-                    debugger;
                     var lat_new = event.latLng.lat();
                     var lng_new = event.latLng.lng();
                     var keys = Object.keys(localStorage);
