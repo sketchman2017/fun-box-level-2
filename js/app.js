@@ -98,7 +98,7 @@ function($rootScope) {}).controller("ListController",
             var val = points_list[k];
             var marker;
 
-            if (google !== undefined) {
+            if (typeof google !== "undefined") {
                 // Создание маркера
                 marker = new google.maps.Marker({
                     position: { lat: val.lat, lng: val.lng },
@@ -299,7 +299,7 @@ function($rootScope) {}).controller("ListController",
     
          new_point.addEventListener("keyup",
           function(event) {
-            if (event.which == 13 && $scope.newPoint != "") {
+            if (event.which == 13 && $scope.newPoint != "" && typeof google !== "undefined") {
                 var new_lat = $scope.initialCoords.lat + 20*(Math.random() - 0.5); 
                 var new_lng = $scope.initialCoords.lng + 20*(Math.random() - 0.5);
 
